@@ -9,7 +9,7 @@ COPY frontend/package*.json ./frontend/
 COPY backend/package*.json ./backend/
 
 # Install dependencies
-RUN npm ci --workspaces --include-workspace-root
+RUN npm install --workspaces --include-workspace-root
 
 # Copy source code
 COPY . .
