@@ -1,122 +1,151 @@
-# Dokumen Analisis Sistem & Arsitektur Software
+# JMC Inventory App - Fullstack Technical Test
 
-**Aplikasi Pengelolaan Barang — PT JMC Indonesia**
+## 🔗 Live Demo
+- **Frontend (Vercel)**: https://jmc-inventory-app.vercel.app
+- **Backend API (Railway)**: https://jmc-inventory-api.railway.app
+- **Swagger Docs**: https://jmc-inventory-api.railway.app/docs
+- **Video Demo**: [YouTube Link](https://youtube.com/watch?v=xxxxxx)
 
----
+## 🛠 Tech Stack
+- **Frontend**: Vue 3 + Vite + Pinia + Tailwind CSS
+- **Backend**: NestJS + Prisma ORM
+- **Database**: PostgreSQL (Neon)
+- **Auth**: JWT + RBAC (Admin/Operator)
 
-## 1. Spesifikasi Tech Stack
-* **Backend**: Node.js (Express.js / NestJS) + Prisma ORM / Sequelize
-* **Frontend**: Vue.js 3 (Composition API + `<script setup>`), Vite, Pinia, Vue Router, Tailwind CSS
-* **Database**: PostgreSQL
-* **Authentication**: JWT (JSON Web Token)
-* **File Storage**: Multer (Local Disk / Cloud Storage)
-* **Excel Export**: `exceljs` / `xlsx`
+## 🚀 Quick Start (Local)
 
----
+```bash
+# Clone
+git clone https://github.com/AmirulJusticia0507/jmc-inventory-app.git
+cd jmc-inventory-app
 
-## 2. Matriks Hak Akses (Role-Based Access Control)
+# Backend
+cd backend
+cp .env.example .env
+# Edit .env with your DATABASE_URL
+npm install
+npx prisma migrate dev
+npm run prisma:seed
+npm run start:dev
 
-| Modul / Fitur | Admin | Operator | Aturan Bisnis & Validasi Kunci |
-| :--- | :---: | :---: | :--- |
-| **Login / Auth** | ✅ | ✅ | Cek username/password & status `is_locked`. Jika `true`, login ditolak. |
-| **Barang Masuk (Read & Filter)** | ✅ | ✅ | Pagination (10 item/page), Filter Kategori, Sub Kategori, Tahun, Search (Asal/Sub Kat), Sorting (Tanggal, Asal, Total). |
-| **Barang Masuk (Create/Edit)** | ✅ | ✅ | **Admin**: Bisa memilih dropdown Operator.<br>**Operator**: Field Operator terkunci (*readonly/disabled*) ke akun sendiri.<br>**Validasi Total Harga**: Total seluruh item barang $\le$ `batas_harga` Sub Kategori. |
-| **Cetak Surat Masuk** | ✅ | ✅ | Halaman Cetak / Export PDF Surat Masuk per transaksi. |
-| **Toggle Verifikasi** | ✅ | ✅ | Toggle status verifikasi data (Icon Centang Hijau). |
-| **Export Excel** | ✅ | ✅ | Download file `.xlsx` sesuai filter & query pencarian yang aktif. |
-| **Master Data: Kategori** | ✅ | ❌ | CRUD Kategori (Modal Popup). Kode unik (max 10 char). |
-| **Master Data: Sub Kategori**| ✅ | ❌ | CRUD Sub Kategori (Modal Popup). Memilih Kategori + Batas Harga (Masking Rupiah). |
-| **Manajemen User** | ✅ | ❌ | CRUD User + Lock/Unlock. Validasi Password: 8-100 char, min. 1 huruf besar, 1 huruf kecil, 1 angka. |
-
----
-
-## 3. Skema Database PostgreSQL
-
-### 3.1 Tabel `users`
-```sql
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    nama VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    role VARCHAR(20) NOT NULL CHECK (role IN ('Admin', 'Operator')),
-    is_locked BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+# Frontend (new terminal)
+cd ../frontend
+npm install
+npm run dev
 ```
 
-### 3.2 Tabel `categories`
-```sql
-CREATE TABLE categories (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    code VARCHAR(10) UNIQUE NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+## 🐳 Docker (Production)
+
+```bash
+# Copy env and edit DATABASE_URL for Neon
+cp .env.production.example .env.production
+
+# Deploy
+docker-compose --env-file .env.production up -d
 ```
 
-### 3.3 Tabel `sub_categories`
-```sql
-CREATE TABLE sub_categories (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
-    name VARCHAR(100) NOT NULL,
-    price_limit NUMERIC(15, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+## 👤 Test Accounts
+
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | `admin` | `password123` |
+| Operator | `operator1` | `password123` |
+
+## ✨ Features
+
+- **Authentication**: JWT login, role-based access, account locking
+- **Categories/Sub-Categories**: CRUD with code (max 10 chars) & price limits
+- **Incoming Goods**: Create/Edit with dynamic items, grand total validation vs price_limit
+- **Operator Lock**: Auto-sets operator_id from JWT for Operator role
+- **Verification**: Toggle verified status (green check icon)
+- **Export**: Excel export with filters
+- **Print**: Surat Masuk print page
+- **File Upload**: Multer for attachments (PDF, images, docs)
+- **Pagination/Search/Filter/Sort**: On all list pages
+
+## 📁 Project Structure
+
+```
+jmc-inventory-app/
+├── backend/                 # NestJS API
+│   ├── src/
+│   │   ├── modules/        # Auth, Users, Categories, SubCategories, IncomingGoods, Upload
+│   │   ├── common/         # Guards, Decorators, Pipes
+│   │   └── prisma/         # Prisma service
+│   ├── prisma/
+│   │   ├── schema.prisma   # 5 models: User, Category, SubCategory, IncomingGood, IncomingGoodItem
+│   │   ├── seed.js         # Automotive seed data
+│   │   └── create-admin.js # Admin user creation
+│   ├── Dockerfile
+│   └── package.json
+├── frontend/                # Vue 3 + Vite
+│   ├── src/
+│   │   ├── views/          # Pages
+│   │   ├── components/     # UI components
+│   │   ├── stores/         # Pinia stores
+│   │   ├── services/       # Axios API
+│   │   └── router/         # Vue Router + guards
+│   ├── nginx.conf          # Nginx config for Docker
+│   ├── Dockerfile
+│   └── package.json
+├── docker-compose.yml       # Full stack with PostgreSQL
+├── Dockerfile               # Combined build
+├── vercel.json             # Vercel config for frontend
+└── .env.production.example # Production env template
 ```
 
-### 3.4 Tabel `incoming_goods`
-```sql
-CREATE TABLE incoming_goods (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    operator_id UUID NOT NULL REFERENCES users(id),
-    category_id UUID NOT NULL REFERENCES categories(id),
-    sub_category_id UUID NOT NULL REFERENCES sub_categories(id),
-    source VARCHAR(200) NOT NULL,
-    letter_number VARCHAR(100),
-    attachment_path VARCHAR(255),
-    is_verified BOOLEAN DEFAULT FALSE,
-    grand_total NUMERIC(15, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+## 🌐 Deployment Guide
+
+### 1. Database (Neon)
+1. Create project at https://neon.tech
+2. Copy connection string → `DATABASE_URL`
+
+### 2. Backend (Railway)
+1. Connect GitHub repo
+2. Add PostgreSQL service or use Neon `DATABASE_URL`
+3. Set env vars:
+   ```
+   DATABASE_URL=postgresql://...
+   JWT_SECRET=your-secret-32-chars
+   PORT=3001
+   NODE_ENV=production
+   APP_URL=https://your-backend.railway.app
+   ```
+4. Deploy → runs `prisma migrate deploy` automatically
+
+### 3. Frontend (Vercel)
+1. Import GitHub repo
+2. Set Root Directory: `frontend`
+3. Build Command: `npm run build`
+4. Output Directory: `dist`
+5. Env Var: `VITE_API_URL=https://your-backend.railway.app/api`
+6. Deploy
+
+### 4. CORS (Backend)
+Update `main.ts` for production:
+```typescript
+app.enableCors({
+  origin: ['https://jmc-inventory-app.vercel.app'],
+  credentials: true,
+});
 ```
 
-### 3.5 Tabel `incoming_good_items`
-```sql
-CREATE TABLE incoming_good_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    incoming_good_id UUID NOT NULL REFERENCES incoming_goods(id) ON DELETE CASCADE,
-    item_code VARCHAR(50) NOT NULL,
-    item_name VARCHAR(200) NOT NULL,
-    price NUMERIC(15, 2) NOT NULL,
-    quantity INT NOT NULL,
-    unit VARCHAR(40) NOT NULL,
-    total_price NUMERIC(15, 2) NOT NULL,
-    expired_date DATE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+## 📝 API Endpoints
 
----
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/login` | Login |
+| GET | `/api/auth/me` | Current user |
+| GET | `/api/categories` | List categories |
+| POST | `/api/categories` | Create (Admin) |
+| GET | `/api/sub-categories` | List sub-categories |
+| POST | `/api/sub-categories` | Create (Admin) |
+| GET | `/api/users` | List users (Admin) |
+| GET | `/api/incoming-goods` | Paginated list |
+| POST | `/api/incoming-goods` | Create |
+| PATCH | `/api/incoming-goods/:id/verify` | Toggle verified |
+| GET | `/api/incoming-goods/export` | Excel export |
+| POST | `/api/upload` | File upload |
 
-## 4. Formula Logika Bisnis & Validasi
-
-1. **Kalkulasi Total Item & Validasi Batas Harga Sub Kategori**:
-   - Untuk setiap baris item $i$:
-     $$\text{total\_price}_i = \text{price}_i \times \text{quantity}_i$$
-   - Total keseluruhan transaksi:
-     $$\text{Grand Total} = \sum_{i=1}^{n} \text{total\_price}_i$$
-   - Syarat simpan data:
-     $$\text{Grand Total} \le \text{SubCategory.price\_limit}$$
-   - Jika $\text{Grand Total} > \text{SubCategory.price\_limit}$, backend melempar error status `422 Unprocessable Entity` ("Total harga barang melebihi batas harga sub kategori").
-
-2. **Penguncian Operator saat Input**:
-   - Jika JWT milik user ber-role `Operator`, endpoint API akan secara otomatis menimpa `operator_id` menggunakan ID dari token JWT demi alasan keamanan (mencegah *impersonation*).
+## 📄 License
+MIT
