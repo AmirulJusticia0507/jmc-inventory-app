@@ -1,7 +1,7 @@
 # JMC Inventory App - Fullstack Technical Test
 
 ## 🔗 Live Demo
-- **Frontend (Vercel)**: https://jmc-inventory-app.vercel.app
+- **Frontend (Vercel)**: https://jmc-inventory-app-mu.vercel.app
 - **Backend API (Railway)**: https://jmc-inventory-api.railway.app
 - **Swagger Docs**: https://jmc-inventory-api.railway.app/docs
 - **Video Demo**: [YouTube Link](https://youtube.com/watch?v=xxxxxx)
@@ -125,7 +125,7 @@ jmc-inventory-app/
 Update `main.ts` for production:
 ```typescript
 app.enableCors({
-  origin: ['https://jmc-inventory-app.vercel.app'],
+  origin: ['https://jmc-inventory-app-mu.vercel.app'],
   credentials: true,
 });
 ```
