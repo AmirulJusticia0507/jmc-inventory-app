@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  nama      String
+  email     String   @unique
+  role      Role     @default(Operator)
+  isLocked  Boolean  @default(false) @map("is_locked")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  incomingGoods IncomingGood[]
+
+  @@map("users")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  code      String   @unique @db.VarChar(10)
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  subCategories     SubCategory[]
+  incomingGoods     IncomingGood[]
+
+  @@map("categories")
+}
+
+model SubCategory {
+  id            String   @id @default(uuid())
+  categoryId    String   @map("category_id")
+  name          String
+  priceLimit    Decimal  @db.Decimal(15, 2) @map("price_limit")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  incomingGoods IncomingGood[]
+
+  @@map("sub_categories")
+}
+
+model IncomingGood {
+  id               String   @id @default(uuid())
+  transactionDate  DateTime @default(now()) @map("transaction_date")
+  operatorId       String   @map("operator_id")
+  categoryId       String   @map("category_id")
+  subCategoryId    String   @map("sub_category_id")
+  source           String
+  letterNumber     String?  @map("letter_number")
+  attachmentPath   String?  @map("attachment_path")
+  isVerified       Boolean  @default(false) @map("is_verified")
+  grandTotal       Decimal  @db.Decimal(15, 2) @map("grand_total")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  operator       User           @relation(fields: [operatorId], references: [id])
+  category       Category       @relation(fields: [categoryId], references: [id])
+  subCategory    SubCategory    @relation(fields: [subCategoryId], references: [id])
+  items          IncomingGoodItem[]
+
+  @@map("incoming_goods")
+}
+
+model IncomingGoodItem {
+  id             String   @id @default(uuid())
+  incomingGoodId String   @map("incoming_good_id")
+  itemCode       String   @db.VarChar(50) @map("item_code")
+  itemName       String   @db.VarChar(200) @map("item_name")
+  price          Decimal  @db.Decimal(15, 2)
+  quantity       Int
+  unit           String   @db.VarChar(40)
+  totalPrice     Decimal  @db.Decimal(15, 2) @map("total_price")
+  expiredDate    DateTime? @db.Date @map("expired_date")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  incomingGood   IncomingGood @relation(fields: [incomingGoodId], references: [id], onDelete: Cascade)
+
+  @@map("incoming_good_items")
+}
+
+enum Role {
+  Admin
+  Operator
+}
