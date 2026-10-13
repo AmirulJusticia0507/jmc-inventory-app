@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { SubCategoriesModule } from './modules/sub-categories/sub-categories.module';
 import { IncomingGoodsModule } from './modules/incoming-goods/incoming-goods.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { IncomingGoodsModule } from './modules/incoming-goods/incoming-goods.mod
     CategoriesModule,
     SubCategoriesModule,
     IncomingGoodsModule,
+    UploadModule,
   ],
 })
 export class AppModule {}

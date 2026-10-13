@@ -15,6 +15,7 @@ const users_module_1 = require("./modules/users/users.module");
 const categories_module_1 = require("./modules/categories/categories.module");
 const sub_categories_module_1 = require("./modules/sub-categories/sub-categories.module");
 const incoming_goods_module_1 = require("./modules/incoming-goods/incoming-goods.module");
+const upload_module_1 = require("./modules/upload/upload.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,6 +32,7 @@ exports.AppModule = AppModule = __decorate([
             categories_module_1.CategoriesModule,
             sub_categories_module_1.SubCategoriesModule,
             incoming_goods_module_1.IncomingGoodsModule,
+            upload_module_1.UploadModule,
         ],
     })
 ], AppModule);

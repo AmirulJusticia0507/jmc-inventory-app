@@ -70,6 +70,20 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Lampiran (PDF, Image, Doc, Excel)</label>
+              <input
+                ref="fileInput"
+                @change="onFileChange"
+                type="file"
+                accept=".pdf,.jpg,.jpeg,.png,.gif,.doc,.docx,.xls,.xlsx"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <p v-if="form.attachmentName" class="mt-1 text-sm text-green-600">
+                File dipilih: {{ form.attachmentName }}
+              </p>
+            </div>
             
             <!-- Operator field - readonly for Operator role -->
             <div v-if="authStore.isAdmin">
@@ -278,6 +292,8 @@ const form = ref({
   source: '',
   letterNumber: '',
   operatorId: '',
+  attachment: null as File | null,
+  attachmentName: '',
   items: [] as Array<{
     itemCode: string;
     itemName: string;
@@ -331,6 +347,14 @@ const onCategoryChange = () => {
   addItem();
 };
 
+const onFileChange = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    form.value.attachment = input.files[0];
+    form.value.attachmentName = input.files[0].name;
+  }
+};
+
 const handleSubmit = async () => {
   if (grandTotal.value > (selectedSubCategory.value?.priceLimit || 0)) {
     error.value = 'Grand total melebihi batas harga sub kategori';
@@ -346,12 +370,24 @@ const handleSubmit = async () => {
   error.value = '';
 
   try {
+    // Upload file first if attachment exists
+    let attachmentPath = undefined;
+    if (form.value.attachment) {
+      const formData = new FormData();
+      formData.append('file', form.value.attachment);
+      const uploadResponse = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      attachmentPath = uploadResponse.data.filename; // Store filename only
+    }
+
     const payload = {
       transactionDate: form.value.transactionDate,
       categoryId: form.value.categoryId,
       subCategoryId: form.value.subCategoryId,
       source: form.value.source,
       letterNumber: form.value.letterNumber || undefined,
+      attachmentPath,
       operatorId: authStore.isAdmin ? form.value.operatorId : undefined,
       items: form.value.items.map(item => ({
         itemCode: item.itemCode,
@@ -414,6 +450,8 @@ onMounted(async () => {
         source: data.source,
         letterNumber: data.letterNumber || '',
         operatorId: data.operatorId,
+        attachment: null,
+        attachmentName: data.attachmentPath ? data.attachmentPath.split('/').pop() || '' : '',
         items: data.items?.map(item => ({
           itemCode: item.itemCode,
           itemName: item.itemName,
