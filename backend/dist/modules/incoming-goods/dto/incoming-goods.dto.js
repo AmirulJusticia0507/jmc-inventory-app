@@ -19,15 +19,15 @@ exports.IncomingGoodItemDto = IncomingGoodItemDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'ITEM001' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(1),
-    (0, class_validator_1.Max)(50),
+    (0, class_validator_1.MinLength)(1),
+    (0, class_validator_1.MaxLength)(50),
     __metadata("design:type", String)
 ], IncomingGoodItemDto.prototype, "itemCode", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Laptop ASUS ROG' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(1),
-    (0, class_validator_1.Max)(200),
+    (0, class_validator_1.MinLength)(1),
+    (0, class_validator_1.MaxLength)(200),
     __metadata("design:type", String)
 ], IncomingGoodItemDto.prototype, "itemName", void 0);
 __decorate([
@@ -47,8 +47,8 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Unit' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(1),
-    (0, class_validator_1.Max)(40),
+    (0, class_validator_1.MinLength)(1),
+    (0, class_validator_1.MaxLength)(40),
     __metadata("design:type", String)
 ], IncomingGoodItemDto.prototype, "unit", void 0);
 __decorate([
@@ -78,22 +78,22 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'PT Supplier Jaya' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(1),
-    (0, class_validator_1.Max)(200),
+    (0, class_validator_1.MinLength)(1),
+    (0, class_validator_1.MaxLength)(200),
     __metadata("design:type", String)
 ], CreateIncomingGoodDto.prototype, "source", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'SM-001/2024' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Max)(100),
+    (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
 ], CreateIncomingGoodDto.prototype, "letterNumber", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'attachments/file.pdf' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Max)(255),
+    (0, class_validator_1.MaxLength)(255),
     __metadata("design:type", String)
 ], CreateIncomingGoodDto.prototype, "attachmentPath", void 0);
 __decorate([
@@ -134,22 +134,22 @@ __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'PT Supplier Jaya' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(1),
-    (0, class_validator_1.Max)(200),
+    (0, class_validator_1.MinLength)(1),
+    (0, class_validator_1.MaxLength)(200),
     __metadata("design:type", String)
 ], UpdateIncomingGoodDto.prototype, "source", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'SM-001/2024' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Max)(100),
+    (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
 ], UpdateIncomingGoodDto.prototype, "letterNumber", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'attachments/file.pdf' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Max)(255),
+    (0, class_validator_1.MaxLength)(255),
     __metadata("design:type", String)
 ], UpdateIncomingGoodDto.prototype, "attachmentPath", void 0);
 __decorate([
@@ -209,6 +209,8 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_transformer_1.Type)(() => Number),
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(1900),
+    (0, class_validator_1.Max)(2100),
     __metadata("design:type", Number)
 ], IncomingGoodQueryDto.prototype, "year", void 0);
 __decorate([
@@ -234,6 +236,7 @@ class ToggleVerifiedDto {
 exports.ToggleVerifiedDto = ToggleVerifiedDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ example: true }),
+    (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], ToggleVerifiedDto.prototype, "isVerified", void 0);
 //# sourceMappingURL=incoming-goods.dto.js.map

@@ -1,18 +1,18 @@
-import { IsString, IsUUID, IsNumber, IsOptional, IsDateString, IsArray, ValidateNested, Min, IsPositive, Max } from 'class-validator';
+import { IsString, IsUUID, IsNumber, IsOptional, IsDateString, IsArray, ValidateNested, MinLength, MaxLength, IsPositive, Min, Max, IsBoolean } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 export class IncomingGoodItemDto {
   @ApiProperty({ example: 'ITEM001' })
   @IsString()
-  @Min(1)
-  @Max(50)
+  @MinLength(1)
+  @MaxLength(50)
   itemCode: string;
 
   @ApiProperty({ example: 'Laptop ASUS ROG' })
   @IsString()
-  @Min(1)
-  @Max(200)
+  @MinLength(1)
+  @MaxLength(200)
   itemName: string;
 
   @ApiProperty({ example: 15000000 })
@@ -29,8 +29,8 @@ export class IncomingGoodItemDto {
 
   @ApiProperty({ example: 'Unit' })
   @IsString()
-  @Min(1)
-  @Max(40)
+  @MinLength(1)
+  @MaxLength(40)
   unit: string;
 
   @ApiPropertyOptional({ example: '2025-12-31' })
@@ -54,20 +54,20 @@ export class CreateIncomingGoodDto {
 
   @ApiProperty({ example: 'PT Supplier Jaya' })
   @IsString()
-  @Min(1)
-  @Max(200)
+  @MinLength(1)
+  @MaxLength(200)
   source: string;
 
   @ApiPropertyOptional({ example: 'SM-001/2024' })
   @IsOptional()
   @IsString()
-  @Max(100)
+  @MaxLength(100)
   letterNumber?: string;
 
   @ApiPropertyOptional({ example: 'attachments/file.pdf' })
   @IsOptional()
   @IsString()
-  @Max(255)
+  @MaxLength(255)
   attachmentPath?: string;
 
   @ApiPropertyOptional({ example: 'uuid-of-operator' })
@@ -101,20 +101,20 @@ export class UpdateIncomingGoodDto {
   @ApiPropertyOptional({ example: 'PT Supplier Jaya' })
   @IsOptional()
   @IsString()
-  @Min(1)
-  @Max(200)
+  @MinLength(1)
+  @MaxLength(200)
   source?: string;
 
   @ApiPropertyOptional({ example: 'SM-001/2024' })
   @IsOptional()
   @IsString()
-  @Max(100)
+  @MaxLength(100)
   letterNumber?: string;
 
   @ApiPropertyOptional({ example: 'attachments/file.pdf' })
   @IsOptional()
   @IsString()
-  @Max(255)
+  @MaxLength(255)
   attachmentPath?: string;
 
   @ApiPropertyOptional({ example: 'uuid-of-operator' })
@@ -160,6 +160,8 @@ export class IncomingGoodQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
+  @Min(1900)
+  @Max(2100)
   year?: number;
 
   @ApiPropertyOptional({ example: 'laptop' })
@@ -180,5 +182,6 @@ export class IncomingGoodQueryDto {
 
 export class ToggleVerifiedDto {
   @ApiProperty({ example: true })
+  @IsBoolean()
   isVerified: boolean;
 }
