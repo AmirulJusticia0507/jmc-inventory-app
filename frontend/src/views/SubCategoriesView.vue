@@ -2,6 +2,15 @@
   <MainLayout>
     <template #default>
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-2xl font-bold text-gray-900">Master Sub Kategori</h1>
+          <button
+            @click="openModal(null)"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium"
+          >
+            Tambah Sub Kategori
+          </button>
+        </div>
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
