@@ -1,12 +1,14 @@
 # JMC Inventory App - Fullstack Technical Test
 
 ## 🔗 Live Demo
+
 - **Frontend (Vercel)**: https://jmc-inventory-app-mu.vercel.app
 - **Backend API (Railway)**: https://jmc-inventory-api.railway.app
 - **Swagger Docs**: https://jmc-inventory-api.railway.app/docs
-- **Video Demo**: [YouTube Link](https://youtube.com/watch?v=xxxxxx)
+- **Video Demo**: [youtu.be/pJXGr-ItO70](https://youtu.be/pJXGr-ItO70)
 
 ## 🛠 Tech Stack
+
 - **Frontend**: Vue 3 + Vite + Pinia + Tailwind CSS
 - **Backend**: NestJS + Prisma ORM
 - **Database**: PostgreSQL (Neon)
@@ -46,9 +48,9 @@ docker-compose --env-file .env.production up -d
 
 ## 👤 Test Accounts
 
-| Role | Username | Password |
-|------|----------|----------|
-| Admin | `admin` | `password123` |
+| Role     | Username      | Password        |
+| -------- | ------------- | --------------- |
+| Admin    | `admin`     | `password123` |
 | Operator | `operator1` | `password123` |
 
 ## ✨ Features
@@ -97,10 +99,12 @@ jmc-inventory-app/
 ## 🌐 Deployment Guide
 
 ### 1. Database (Neon)
+
 1. Create project at https://neon.tech
 2. Copy connection string → `DATABASE_URL`
 
 ### 2. Backend (Railway)
+
 1. Connect GitHub repo
 2. Add PostgreSQL service or use Neon `DATABASE_URL`
 3. Set env vars:
@@ -114,6 +118,7 @@ jmc-inventory-app/
 4. Deploy → runs `prisma migrate deploy` automatically
 
 ### 3. Frontend (Vercel)
+
 1. Import GitHub repo
 2. Set Root Directory: `frontend`
 3. Build Command: `npm run build`
@@ -122,7 +127,9 @@ jmc-inventory-app/
 6. Deploy
 
 ### 4. CORS (Backend)
+
 Update `main.ts` for production:
+
 ```typescript
 app.enableCors({
   origin: ['https://jmc-inventory-app-mu.vercel.app'],
@@ -132,20 +139,21 @@ app.enableCors({
 
 ## 📝 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | Current user |
-| GET | `/api/categories` | List categories |
-| POST | `/api/categories` | Create (Admin) |
-| GET | `/api/sub-categories` | List sub-categories |
-| POST | `/api/sub-categories` | Create (Admin) |
-| GET | `/api/users` | List users (Admin) |
-| GET | `/api/incoming-goods` | Paginated list |
-| POST | `/api/incoming-goods` | Create |
-| PATCH | `/api/incoming-goods/:id/verify` | Toggle verified |
-| GET | `/api/incoming-goods/export` | Excel export |
-| POST | `/api/upload` | File upload |
+| Method | Endpoint                           | Description         |
+| ------ | ---------------------------------- | ------------------- |
+| POST   | `/api/auth/login`                | Login               |
+| GET    | `/api/auth/me`                   | Current user        |
+| GET    | `/api/categories`                | List categories     |
+| POST   | `/api/categories`                | Create (Admin)      |
+| GET    | `/api/sub-categories`            | List sub-categories |
+| POST   | `/api/sub-categories`            | Create (Admin)      |
+| GET    | `/api/users`                     | List users (Admin)  |
+| GET    | `/api/incoming-goods`            | Paginated list      |
+| POST   | `/api/incoming-goods`            | Create              |
+| PATCH  | `/api/incoming-goods/:id/verify` | Toggle verified     |
+| GET    | `/api/incoming-goods/export`     | Excel export        |
+| POST   | `/api/upload`                    | File upload         |
 
 ## 📄 License
+
 MIT
