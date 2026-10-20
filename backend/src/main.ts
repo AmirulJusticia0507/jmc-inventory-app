@@ -32,6 +32,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
+  // Enable CORS for cross-origin requests (e.g. frontend on Vercel calling backend on Railway)
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: process.env.CORS_ORIGIN ? true : false,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
   console.log(`🚀 Server running on http://localhost:${port}/api`);
